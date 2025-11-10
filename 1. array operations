@@ -1,0 +1,88 @@
+#include <stdio.h>
+#define MAX_SIZE 10
+void displayArray(int arr[], int size) {
+    printf("Array: ");
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+void insert(int arr[], int *size, int position, int value) {
+    if (*size >= MAX_SIZE) {
+        printf("Array is full. Cannot insert more elements.\n");
+        return;
+    }
+    for (int i = *size; i >= position; i--) {
+        arr[i] = arr[i - 1];
+    }
+    arr[position - 1] = value;
+    (*size)++;
+}
+void delete(int arr[], int *size, int position) {
+    if (*size == 0) {
+        printf("Array is empty. Cannot delete elements.\n");
+        return;
+    }
+    for (int i = position - 1; i < *size - 1; i++) {
+        arr[i] = arr[i + 1];
+    }
+    (*size)--;
+}
+int search(int arr[], int size, int value) {
+    for (int i = 0; i < size; i++) {
+        if (arr[i] == value) {
+            return i;
+        }
+    }
+    return -1;
+}
+void reverse(int arr[], int size) {
+    int temp;
+    int start = 0, end = size - 1;
+    while (start < end) {
+        temp = arr[start];
+        arr[start] = arr[end];
+        arr[end] = temp;
+        start++;
+        end--;
+    }
+}
+void findMaxMin(int arr[], int size, int *max, int *min) {
+    *max = arr[0];
+    *min = arr[0];
+    for (int i = 1; i < size; i++) {
+        if (arr[i] > *max) {
+            *max = arr[i];
+        }
+        if (arr[i] < *min) {
+            *min = arr[i];
+        }
+    }
+}
+int main() {
+    int arr[MAX_SIZE] = {1, 2, 3, 4, 5};
+    int size = 5;
+    int max, min, position, value;
+    printf("Initial array: ");
+    displayArray(arr, size);
+    printf("Enter value to insert at position 3: ");
+    scanf("%d", &value);
+    insert(arr, &size, 3, value);
+    displayArray(arr, size);
+    delete(arr, &size, 2);
+    displayArray(arr, size);
+    printf("Enter value to search: ");
+    scanf("%d", &value);
+    position = search(arr, size, value);
+    if (position != -1) {
+        printf("Element %d found at index %d.\n", value, position);
+    } else {
+        printf("Element %d not found in the array.\n", value);
+    }
+    reverse(arr, size);
+    printf("Array after reversal: ");
+    displayArray(arr, size);
+    findMaxMin(arr, size, &max, &min);
+    printf("Max value: %d, Min value: %d\n", max, min);
+    return 0;
+}
