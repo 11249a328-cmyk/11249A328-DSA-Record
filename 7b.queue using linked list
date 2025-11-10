@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+    int data;
+    struct Node* next;
+};
+struct Queue {
+    struct Node* front;
+    struct Node* rear;
+};
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
+}
+void initQueue(struct Queue* q) {
+    q->front = q->rear = NULL;
+}
+int isEmpty(struct Queue* q) {
+    return q->front == NULL;
+}
+void enqueue(struct Queue* q, int value) {
+    struct Node* newNode = createNode(value);
+    if (q->rear == NULL) {
+        q->front = q->rear = newNode;
+        printf("%d enqueued to the queue.\n", value);
+        return;
+    }
+    q->rear->next = newNode;
+    q->rear = newNode;
+    printf("%d enqueued to the queue.\n", value);
+}
+int dequeue(struct Queue* q) {
+    if (isEmpty(q)) {
+        printf("Queue Underflow! Queue is empty.\n");
+        return -1; 
+    }
+    struct Node* temp = q->front;
+    int dequeuedValue = temp->data;
+    q->front = q->front->next;
+    if (q->front == NULL) {
+        q->rear = NULL; 
+    }
+    free(temp); 
+    printf("%d dequeued from the queue.\n", dequeuedValue);
+    return dequeuedValue;
+}
+int front(struct Queue* q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty.\n");
+        return -1; 
+    }
+    return q->front->data;
+}
+int rear(struct Queue* q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty.\n");
+        return -1; 
+    }
+    return q->rear->data;
+}
+void displayQueue(struct Queue* q) {
+    if (isEmpty(q)) {
+        printf("Queue is empty.\n");
+        return;
+    }
+    struct Node* temp = q->front;
+    printf("Queue elements: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+int main() {
+    struct Queue q;
+    initQueue(&q);
+    int choice, value;
+    while (1) {
+        printf("\nQueue Operations:\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Front\n");
+        printf("4. Rear\n");
+        printf("5. Display Queue\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                printf("Enter value to enqueue: ");
+                scanf("%d", &value);
+                enqueue(&q, value);
+                break;
+            case 2:
+                dequeue(&q);
+                break;
+            case 3:
+                value = front(&q);
+                if (value != -1) {
+                    printf("Front element is: %d\n", value);
+                }
+                break;
+            case 4:
+                value = rear(&q);
+                if (value != -1) {
+                    printf("Rear element is: %d\n", value);
+                }
+                break;
+            case 5:
+                displayQueue(&q);
+                break;
+            case 6:
+                printf("Exiting program.\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
